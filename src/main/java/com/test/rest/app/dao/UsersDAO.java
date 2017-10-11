@@ -8,6 +8,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.test.rest.app.models.Users;
 import com.test.rest.app.utils.ConnectionMongoDB;
 
@@ -39,15 +40,17 @@ public class UsersDAO implements Dao{
 		DBCollection users = db.getCollection("users");
 		List<Users> listUsers = new ArrayList<>();
 		
-		DBCursor cursorUser = users.find();
-		while(cursorUser.hasNext()){
-			Users user = new Users();
-			user.setId(cursorUser.next().get("_id").toString());
-			user.setUsername(cursorUser.next().get("username").toString());
-			user.setPassword(cursorUser.next().get("password").toString());
-			user.setEmail(cursorUser.next().get("email").toString());
-			listUsers.add(user);
-		}
+		List<DBObject> listaUsuarios = users.find().toArray();
+		
+		
+		listaUsuarios.forEach(user->{
+			Users u = new Users();
+			u.setId(user.get("_id").toString());
+			u.setUsername(user.get("username").toString());
+			u.setEmail(user.get("email").toString());
+			u.setPassword(user.get("password").toString());
+			listUsers.add(u);
+		});
 		
 		return listUsers;
 	}
