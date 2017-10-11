@@ -19,7 +19,10 @@ public class App {
 		UsersDAO usersDAO = new UsersDAO();
 	
 		
-        get("/users", "application/json", (req, res)-> usersDAO.findAll(), gson::toJson);
+        get("/users", (req, res)->{
+        	res.type("application/json"); 
+        	return usersDAO.findAll();
+        	}, gson::toJson);
         
        
         post("/users", "application/json", (req, res)->{
